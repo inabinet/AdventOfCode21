@@ -47,6 +47,28 @@ def part1(drawnNumbers, boards):
     return sum(unmarked) * finalNumber
 
 
+def part2(drawnNumbers, boards):
+    # reuse of part one, but just return first board that doesn't win instead of removing and continuing
+    finalBoard = None
+    finalNumber = None
+    while drawnNumbers:
+        bingo = set(drawnNumbers).issuperset
+        for idx, board in enumerate(boards):
+            bCol = np.apply_along_axis(bingo, 0, board)
+            bRow = np.apply_along_axis(bingo, 1, board)
+            if not (any(bCol) or any(bRow)):
+                finalBoard = board
+        if finalBoard is not None:
+            break
+        else:
+            finalNumber = drawnNumbers.pop()
+
+    drawnNumbers.append(finalNumber)
+    flat = finalBoard.flatten()
+    unmarked = [i for i in flat if i not in drawnNumbers]
+    return sum(unmarked) * finalNumber
+
+
 # Example
 tmp = """\
 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
@@ -74,6 +96,8 @@ exampleInputs = [i.strip() for i in tmp.split('\n')]
 
 drawnNumbers, boards = splitInput(exampleInputs)
 print(part1(drawnNumbers,boards))
+drawnNumbers, boards = splitInput(exampleInputs)
+print(part2(drawnNumbers,boards))
 
 
 # Part 1
@@ -81,4 +105,5 @@ drawnNumbers, boards = splitInput(inputs)
 print(part1(drawnNumbers,boards))
 
 # Part 2
-
+drawnNumbers, boards = splitInput(inputs)
+print(part2(drawnNumbers,boards))
