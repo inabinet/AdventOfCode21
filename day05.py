@@ -4,7 +4,7 @@ with open('inputs/day05','r') as f:
     inputs = [i.strip() for i in f]
 
 
-def part1(lineList):
+def getPoints(lineList, part=1):
     map = {}
     myre = re.compile('(\d+),(\d+)\s->\s(\d+),(\d+)')
     for line in lineList:
@@ -25,7 +25,19 @@ def part1(lineList):
                 else:
                     map[pos] = 1
         else:
-            pass  # per instructions, ignorning for now
+            if part == 2:
+                xincr = 1 if x1 < x2 else -1
+                yincr = 1 if y1 < y2 else -1
+                x = x1 - xincr
+                y = y1 - yincr
+                while x != x2:
+                    x += xincr
+                    y += yincr
+                    pos = complex(x, y)
+                    if pos in map:
+                        map[pos] += 1
+                    else:
+                        map[pos] = 1
 
     allPos = list(map.values())
     posOnly1 = allPos.count(1)
@@ -48,10 +60,11 @@ tmp = """\
 
 exampleInputs = [i.strip() for i in tmp.split('\n')]
 
-print(part1(exampleInputs))
-
+print(getPoints(exampleInputs, part=1))
+print(getPoints(exampleInputs, part=2))
 
 # Part 1
-print(part1(inputs))
+print(getPoints(inputs, part=1))
 
 # Part 2
+print(getPoints(inputs, part=2))
