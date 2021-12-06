@@ -41,8 +41,8 @@ tmp = """\
 exampleInputs = [i.strip() for i in tmp.split('\n')]
 
 fishes = [int(f) for f in exampleInputs[0].split(',')]
-print(calcNumberFish(fishes))
-
+print(calcNumberFish(fishes, nDays=80))
+print(calcNumberFish(fishes, nDays=256))
 
 
 # Part 1
@@ -51,4 +51,4 @@ print(calcNumberFish(fishes))
 
 
 # Part 2
-
+print(calcNumberFish(fishes, nDays=256))
