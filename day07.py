@@ -6,9 +6,9 @@ with open('inputs/day07','r') as f:
 
 def getFuel(crabList, verbose=False):
     crabs = crabList[:]
-    # ncrabs = len(crabs)
+
     avg = crabs.mean()
-    fuel = 0
+    fuel = np.array([0 for _ in crabs])
 
     if verbose:
         print(crabs)
@@ -17,29 +17,33 @@ def getFuel(crabList, verbose=False):
         target = int(avg.round())
         hi = crabs > target
         lo = crabs < target
-        nhi = hi.sum()
-        nlo = lo.sum()
 
-        if 0 < nhi < nlo:
+        fuelhi = np.where(hi, fuel + 1, fuel)
+        fuello = np.where(lo, fuel + 1, fuel)
+        deltaFuelHi = fuelhi.sum() - fuel.sum()
+        deltaFuelLo = fuello.sum() - fuel.sum()
+
+        if 0 < deltaFuelHi < deltaFuelLo:
             crabs = np.where(hi, crabs - 1, crabs)
-            fuel += nhi
-        elif 0 < nlo < nhi:
+            fuel = fuelhi
+        elif 0 < deltaFuelLo < deltaFuelHi:
             crabs = np.where(lo, crabs + 1, crabs)
-            fuel += nlo
-        elif nhi > 0:
+            fuel = fuello
+        elif deltaFuelHi > 0:
             crabs = np.where(hi, crabs - 1, crabs)
-            fuel += nhi
-        elif nlo > 0:
+            fuel = fuelhi
+        elif deltaFuelLo > 0:
             crabs = np.where(lo, crabs + 1, crabs)
-            fuel += nlo
+            fuel = fuello
         else:
             print('hmmmmm....')
 
+
         avg = crabs.mean()
         if verbose:
-            print(crabs, target, avg, fuel)
+            print(crabs, target, avg, fuel, fuel.sum())
 
-    return fuel
+    return fuel.sum()
 
 
 # Example
