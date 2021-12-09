@@ -16,18 +16,15 @@ def findMinIndexes(heightmap):
     up      = np.pad(heightmap,((0,2),(1,1)),constant_values=99)
     down    = np.pad(heightmap,((2,0),(1,1)),constant_values=99)
 
-    # calculate the minimum neighbor for each location
-    mins = np.minimum(padded,left)
-    mins = np.minimum(mins,right)
-    mins = np.minimum(mins,up)
-    mins = np.minimum(mins,down)
+    # calculate the max delta between each location and it's neighbor
+    delta = padded - left
+    delta = np.maximum(delta, padded-right)
+    delta = np.maximum(delta, padded-up)
+    delta = np.maximum(delta, padded-down)
+    delta = delta[1:-1,1:-1]  # remove padding
 
-    # subtract mins from padded map (zeros will mean that location is the minimum)
-    minmap = padded - mins
-    minmap = minmap[1:-1,1:-1]  # remove padding
-
-    # get indexes of 0s and return
-    idxs = np.where(minmap==0)
+    # get indexes where delta < 0 and return
+    idxs = np.where(delta < 0)
     return idxs
 
 
@@ -40,13 +37,12 @@ def part1(inputValues):
 
 
 
-
 # Example
 tmp = """\
 2199943210
 3987894921
 9856789892
-8767896789
+8769896789
 9899965678"""
 
 exampleInputs = [i.strip() for i in tmp.split('\n')]
