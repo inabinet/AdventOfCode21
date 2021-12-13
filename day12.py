@@ -16,15 +16,19 @@ def getConnectionDict(inputList):
     return connections
 
 
-def walk(connections, pnt='start', path=('start',)):
+def walk(connections, pnt='start', path=('start',), part2=False):
     # at the end, have 1 point (valid path)
     if pnt == 'end':
         #print(path)
         return 1
 
-    conns = connections[pnt]
-    tmp = [p for p in path if p.islower()]
-    conns = conns.difference(tmp)
+    conns = set(connections[pnt])
+    conns.discard('start')
+    tmpList = [p for p in path if p.islower()]
+    tmpSet = set(tmpList)
+
+    if not part2 or len(tmpList) > len(tmpSet):
+        conns.difference_update(tmpSet)
 
     # no conns left (you cannot go anywhere); 0
     if not conns:
@@ -35,7 +39,7 @@ def walk(connections, pnt='start', path=('start',)):
         newpath = list(path)
         #if c.islower():
         newpath.append(c)
-        n += walk(connections, c, newpath)
+        n += walk(connections, pnt=c, path=newpath, part2=part2)
 
     return n
 
@@ -94,10 +98,8 @@ exampleInputs = [i.strip() for i in tmp.split('\n')]
 conn3 = getConnectionDict(exampleInputs)
 
 
-print(walk(conn1))
-print(walk(conn2))
-print(walk(conn3))
-
+print(walk(conn1), walk(conn2), walk(conn3))
+print(walk(conn1, part2=True), walk(conn2, part2=True), walk(conn3, part2=True))
 
 
 # Part 1
@@ -106,4 +108,4 @@ print(walk(conns))
 
 
 # Part 2
-
+print(walk(conns, part2=True))
