@@ -51,7 +51,7 @@ def fold(points, fold):
     return folded
 
 
-def visiualize(points):
+def visualize(points):
     dims = [(p.real, p.imag) for p in points]
     xpnts,ypnts = list(zip(*dims))
     xmax = int(max(xpnts))+1
@@ -61,7 +61,7 @@ def visiualize(points):
             if complex(x,y) in points:
                 char = '#'
             else:
-                char = '.'
+                char = ' '
             print(char, sep='', end='')
         print()
 
@@ -97,6 +97,10 @@ points, folds = processInputs(exampleInputs)
 points = fold(points, folds[0])
 print(len(points))
 
+for f in folds[1:]:
+    points = fold(points, f)
+visualize(points)
+
 
 # Part 1
 points, folds = processInputs(inputs)
@@ -105,4 +109,6 @@ print(len(points))
 
 
 # Part 2
-
+for f in folds[1:]:
+    points = fold(points, f)
+visualize(points)
