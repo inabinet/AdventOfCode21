@@ -13,6 +13,15 @@ def part1(inputList):
     return flashes
 
 
+def part2(inputList):
+    octopuses = np.array([np.array([int(p) for p in row]) for row in inputList])
+    i = 0
+    while np.any(octopuses):
+        octopuses, _ = step(octopuses)
+        i += 1
+    return i
+
+
 def step(octopuses):
     # add 1 to all
     octopuses += 1
@@ -67,6 +76,7 @@ exampleInputs = [i.strip() for i in tmp.split('\n')]
 
 
 print(part1(exampleInputs))
+print(part2(exampleInputs))
 
 
 
@@ -75,4 +85,4 @@ print(part1(inputs))
 
 
 # Part 2
-
+print(part2(inputs))
