@@ -60,8 +60,8 @@ def getCharCount(pairDict):
     return countDict
 
 
-def part1(pairDict, rules):
-    for _ in range(10):
+def getScore(pairDict, rules, steps=10):
+    for _ in range(steps):
         pairDict = step(pairDict, rules)
     countDict = getCharCount(pairDict)
     counts = sorted(list(countDict.values()), reverse=True)
@@ -94,15 +94,16 @@ exampleInputs = [i.strip() for i in tmp.split('\n')]
 
 template, rules = processInputs(exampleInputs)
 pairDict = getInitialPairsDict(template, rules)
-print(part1(pairDict, rules))
+print(getScore(pairDict, rules, 10))
+print(getScore(pairDict, rules, 40))
 
 
 
 # Part 1
 template, rules = processInputs(inputs)
 pairDict = getInitialPairsDict(template, rules)
-print(part1(pairDict, rules))
+print(getScore(pairDict, rules, 10))
 
 
 # Part 2
-
+print(getScore(pairDict, rules, 40))
