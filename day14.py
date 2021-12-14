@@ -12,37 +12,59 @@ def processInputs(inputList):
     for ln in inputList[2:]:
         if m := myre.match(ln):
             pair, insertion = m.groups()
-            rules[pair] = insertion
+            p1 = f'{pair[0]}{insertion}'
+            p2 = f'{insertion}{pair[1]}'
+            rules[pair] = [p1, p2]
     return template, rules
 
 
-def step(template, rules):
+def getInitialPairsDict(template, rules):
+    unique = set(rules.keys())
+    unique = unique.union([pair for pairs in rules.values() for pair in pairs])
+    pairDict = {pair:0 for pair in unique}
+
     n = len(template)
-    out = ''
     for i in range(n-1):
         pair = template[i:i+2]
-        if pair in rules:
-            insertion = pair[0] + rules[pair]# + pair[1]
-            out += insertion
-        else:
-            out += pair[0]
-    out += template[-1]
+        pairDict[pair] += 1
+
+    return pairDict
+
+
+def step(pairDict, rules):
+    delta = {k:0 for k in pairDict.keys()}
+
+    # find changes
+    for pair, cnt in pairDict.items():
+        if cnt > 0:
+            p1,p2 = rules[pair]
+            delta[pair] -= cnt
+            delta[p1] += cnt
+            delta[p2] += cnt
+
+    # apply changes
+    out = {k:cnt+delta[k] for k,cnt in pairDict.items()}
+
     return out
 
 
-def getCharCount(chain):
-    chars = set(chain)
-    countDict = {chain.count(c):c for c in chars}
+def getCharCount(pairDict):
+    chars = set((char for keys in pairDict for char in keys))
+    countDict = {c:0 for c in chars}
+    for pair, cnt in pairDict.items():
+        char1, char2 = pair
+        countDict[char1] += cnt
+        countDict[char2] += cnt
+    # divide by 2 needed to not double-count characters (though I don't fully understand how this works)
+    countDict = {k:(v+1)//2 for k,v in countDict.items()}
     return countDict
 
 
-
-def part1(template, rules):
-    chain = template
+def part1(pairDict, rules):
     for _ in range(10):
-        chain = step(chain, rules)
-    countDict = getCharCount(chain)
-    counts = sorted(list(countDict.keys()), reverse=True)
+        pairDict = step(pairDict, rules)
+    countDict = getCharCount(pairDict)
+    counts = sorted(list(countDict.values()), reverse=True)
     return counts[0] - counts[-1]
 
 
@@ -71,13 +93,15 @@ CN -> C"""
 exampleInputs = [i.strip() for i in tmp.split('\n')]
 
 template, rules = processInputs(exampleInputs)
-print(part1(template, rules))
+pairDict = getInitialPairsDict(template, rules)
+print(part1(pairDict, rules))
 
 
 
 # Part 1
 template, rules = processInputs(inputs)
-print(part1(template, rules))
+pairDict = getInitialPairsDict(template, rules)
+print(part1(pairDict, rules))
 
 
 # Part 2
