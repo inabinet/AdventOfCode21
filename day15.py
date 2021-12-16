@@ -9,6 +9,23 @@ def getMap(inputValues):
     return np.array([[int(p) for p in row] for row in inputValues])
 
 
+def expandMap(cave):
+    tiles = [cave]
+    for i in range(8):
+        nxt = tiles[-1] + 1
+        nxt = np.where(nxt == 10, 1, nxt)
+        tiles.append(nxt)
+
+    rows = []
+    for i in range(5):
+        row = np.concatenate(tiles[i:i+5], axis=1)
+        rows.append(row)
+
+    expandedCave = np.concatenate(rows, axis=0)
+
+    return expandedCave
+
+
 def getDistMap(cave):
     dist = np.copy(cave)
     diagMax = len(cave)
@@ -61,6 +78,9 @@ cave = getMap(exampleInputs)
 dist = getDistMap(cave)
 print(dist[0,0] - cave[0,0])
 
+bigcave = expandMap(cave)
+bigdist = getDistMap(bigcave)
+print(bigdist[0,0] - bigcave[0,0])
 
 
 # Part 1
@@ -70,4 +90,6 @@ print(dist[0,0] - cave[0,0])
 
 
 # Part 2
-
+bigcave = expandMap(cave)
+bigdist = getDistMap(bigcave)
+print(bigdist[0,0] - bigcave[0,0], '2870 is too big')
