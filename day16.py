@@ -1,7 +1,19 @@
+from math import prod
 
 with open('inputs/day16','r') as f:
     inputs = [int(i.strip(),16) for i in f]
 
+
+
+operation = {
+    0: sum,
+    1: prod,
+    2: min,
+    3: max,
+    5: lambda x: int(x[0] > x[1]),
+    6: lambda x: int(x[0] < x[1]),
+    7: lambda x: int(x[0] == x[1]),
+}
 
 
 def decode_packet(binStr, cur=0, convert=True):
@@ -56,6 +68,10 @@ def decode_packet(binStr, cur=0, convert=True):
                 output['values'].extend(tmp['values'])
                 output['versions'].extend(tmp['versions'])
 
+        op = operation[pktType]
+        curVals = output['values']
+        newVal = op(curVals)
+        output['values'] = [newVal]
         output['cursor'] = cur
         return output
 
@@ -87,8 +103,9 @@ print(sum(decode_packet(exampleInputs[6])['versions']))
 
 
 # Part 1
-print(sum(decode_packet(inputs[0])['versions']))
+decoded = decode_packet(inputs[0])
+print(sum(decoded['versions']))
 
 
 # Part 2
-
+print(decoded['values'])
