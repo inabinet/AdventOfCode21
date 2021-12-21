@@ -56,8 +56,6 @@ class SnailfishNumber:
 
         return self._magnitude
 
-
-    #def _reduce(self, idx = None):
     def _explode(self, idx = None):
         if idx == None:
             idx = []
@@ -99,8 +97,6 @@ class SnailfishNumber:
 
         return True
 
-
-
     def _get_val(self, idx):    # deprecate?
         val = self._value
         for i in idx:
@@ -121,42 +117,16 @@ class SnailfishNumber:
         ref[idx[-1]] = value
 
     def _add_left(self, idx, value):
-        #self.__add_rightLeft(idx, value, 0)
-        idx = self._findIndexRegularLeftRight(idx, 0)
-        if idx:
-            current = self._get_val(idx)
-            self._set_val(idx, current+value)
+        self.__add_left_right(idx, value, lr=0)
 
     def _add_right(self, idx, value):
-        #self.__add_rightLeft(idx, value, 1)
-        idx = self._findIndexRegularLeftRight(idx, 1)
+        self.__add_left_right(idx, value, lr=1)
+
+    def __add_left_right(self, idx, value, lr):
+        idx = self._findIndexRegularLeftRight(idx, lr)
         if idx:
             current = self._get_val(idx)
             self._set_val(idx, current+value)
-
-    def __add_rightLeft(self, idx, value, dir):
-        oppDir = dir^1
-        if idx.count(oppDir) > 0:
-            #tmp = idx[::-1]
-            #stop = len(idx) - 1 - tmp.index(oppDir)
-            tmp = idx[:-1]
-            if tmp[-1] == oppDir:
-                tmp = tmp[:-1]
-            ref = self.__value
-            for i in tmp:
-                ref = ref[i]
-
-            while True: #isinstance(ref[dir], list):
-                if isinstance(ref[0], int):
-                    ref[0] += value
-                    break
-                elif isinstance(ref[1], int):
-                    ref[1] += value
-                    break
-                else:
-                    ref = ref[dir]
-            #ref += value
-
 
     def _findIndexRegularLeftRight(self, idx, lr):
         opp = lr ^ 1    # get the opposite direction
@@ -193,35 +163,6 @@ class SnailfishNumber:
                 idx = self._findFirstChildInt(tmp, lr)
                 if idx:
                     return idx
-        '''
-        # left child is int
-        if isinstance(ref[0], int):
-            found = idx+[0]
-            if found != ignore:
-                return found
-        
-        # right child is int
-        if isinstance(ref[1], int):
-            found = idx+[1]
-            if found != ignore:
-                return found
-        
-
-        # traverse left child
-        left = idx+[0]
-        if left != ignore:
-            idx = self._findFirstChildInt(left)
-            if idx:# and idx != ignore:
-                return idx
-
-        # traverse right child
-        right = idx+[1]
-        if right != ignore:
-            idx = self._findFirstChildInt(right)
-            if idx:# and idx != ignore:
-                return idx
-        
-        '''
 
         # no child found down this branch
         return None
