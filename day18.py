@@ -1,3 +1,4 @@
+from copy import deepcopy
 
 with open('inputs/day18','r') as f:
     inputs = [i.strip() for i in f]
@@ -7,7 +8,8 @@ with open('inputs/day18','r') as f:
 class SnailfishNumber:
     def __init__(self, number):
         self.__value = None
-        self._value = number
+        ncopy = deepcopy(number)
+        self._value = ncopy
         self._magnitude = None
 
     @property
@@ -32,11 +34,11 @@ class SnailfishNumber:
 
     @property
     def left(self):
-        return self[0]
+        return SnailfishNumber(self._value[0])
 
     @property
     def right(self):
-        return self[1]
+        return SnailfishNumber(self._value[1])
 
     @property
     def _leftVal(self):
@@ -149,7 +151,8 @@ class SnailfishNumber:
         return None
 
     def _findFirstChildInt(self, idx, lr, ignore=None):
-        ref = self._get_val_reference(idx)
+        #ref = self._get_val_reference(idx)
+        ref = self._get_val(idx)
 
         # check children in this order
         for i in (lr, lr^1):
@@ -173,8 +176,11 @@ class SnailfishNumber:
     def __repr__(self):
         return repr(self._value)
 
-    def __getitem__(self, item):
-        return SnailfishNumber(self._value[item])
+    #def __getitem__(self, item):
+    #    return SnailfishNumber(self._value[item])
+
+    def __eq__(self, other):
+        return self._value == other._value
 
 
 
@@ -185,8 +191,8 @@ class SnailfishNumber:
 #g = SnailfishNumber([[[[4,3],4],4],[7,[[8,4],9]]])
 #h = SnailfishNumber([1,1])
 #i = g+h
-k = SnailfishNumber([[9,1],[1,9]])
-kmag = k.magnitude
+#k = SnailfishNumber([[9,1],[1,9]])
+#kmag = k.magnitude
 
 
 # Example
@@ -238,6 +244,18 @@ print(res)
 print(res.magnitude)
 
 
+snums = [SnailfishNumber(eval(i)) for i in exampleInputs]
+x = snums[0]+snums[1]
+
+mags = []
+for a in snums:
+    for b in snums:
+        if a!=b:
+            tmpsum = a+b
+            mags.append(tmpsum.magnitude)
+print(max(mags))
+
+
 # Part 1
 snums = [SnailfishNumber(eval(i)) for i in inputs]
 res = snums[0]
@@ -248,4 +266,10 @@ print(res.magnitude)
 
 
 # Part 2
-
+mags = []
+for a in snums:
+    for b in snums:
+        if a!=b:
+            tmpsum = a+b
+            mags.append(tmpsum.magnitude)
+print(max(mags))
