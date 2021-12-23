@@ -272,4 +272,9 @@ print(points)
 
 
 # Part 2
-
+locations = [mapinfo[i]['offset'] for i in range(len(data))]
+distances = []
+for a in locations:
+ for b in locations:
+  manhattan = sum(np.abs(np.subtract(a,b)))
+  distances.append(manhattan)
