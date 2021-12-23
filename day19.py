@@ -50,8 +50,8 @@ def getScannerData(inputList):
 
 def findOverlaps(ref, scanner):
     refset = set([tuple(p) for p in ref])
+    options = np.swapaxes(scanner.dot(orientations), 0, 1)
     for point in ref:
-        options = np.swapaxes(scanner.dot(orientations), 0, 1)
         for i, rotation in enumerate(options):
             offsets = point - rotation
             for offset in offsets:
@@ -260,9 +260,15 @@ print(scanhits-common)
 # Part 1
 data = getScannerData(inputs)
 mapinfo = getMapInfo(data)
-scanhits = sum([len(d) for d in data])
-common = sum([v['n'] for v in mapinfo.values()])
-print(scanhits-common)
+#scanhits = sum([len(d) for d in data])
+#common = sum([v['n'] for v in mapinfo.values()])
+#print(scanhits-common)
+data2 = [data[i].dot(orientations[mapinfo[i]['rotate']])+mapinfo[i]['offset'] for i in range(len(data))]
+points = set()
+for d in data2:
+    for p in d:
+        points.add(tuple(p))
+print(points)
 
 
 # Part 2
