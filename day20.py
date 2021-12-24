@@ -75,6 +75,12 @@ def part1(algo, map):
     return(len(out))
 
 
+def part2(algo, map):
+    out = applyAlgoToMap(algo, map, cnt=50)
+    return(len(out))
+
+
+
 # Example
 tmp = """\
 ..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..##\
@@ -98,13 +104,14 @@ example1 = ['acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb 
 algo, map = process(exampleInputs)
 #visualize(map)
 print(part1(algo, map))
+print(part2(algo, map))
 
 
 
 # Part 1
 algo, map = process(inputs)
-print(part1(algo, map)) #5224 is too large & 5207 is too large??
+print(part1(algo, map))
 
 
 # Part 2
-
+print(part2(algo, map))
